@@ -8,21 +8,14 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="edu.washington.srloftis.quizdroid.Math">
+    tools:context="edu.washington.srloftis.quizdroid.Topic">
 
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/fragment_placeholder"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="This quiz is about math. There are 2 questions."/>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Begin"
-        android:id="@+id/btnBegin" />
-    </LinearLayout>
+        android:layout_height="match_parent">
+
+    </FrameLayout>
+
 
 </RelativeLayout>

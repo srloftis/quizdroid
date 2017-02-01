@@ -15,21 +15,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Math1" />
-        <activity android:name=".Physics1" />
-        <activity android:name=".MH1" />
-        <activity android:name=".Math" />
-        <activity android:name=".Physics" />
-        <activity android:name=".MH" />
-        <activity android:name=".Math2" />
-        <activity android:name=".Math3" />
-        <activity android:name=".Math4" />
-        <activity android:name=".Physics2" />
-        <activity android:name=".Physics3" />
-        <activity android:name=".Physics4" />
-        <activity android:name=".MH2" />
-        <activity android:name=".MH3" />
-        <activity android:name=".MH4"></activity>
+        <activity android:name=".Topic" />
     </application>
 
 </manifest>

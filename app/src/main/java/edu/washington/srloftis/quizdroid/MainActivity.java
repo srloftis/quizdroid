@@ -10,15 +10,14 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView;
 import android.content.Intent;
 
-import java.util.Arrays;
-import java.util.List;
-
 
 public class MainActivity extends Activity {
 
     private String[] topics = new String[]{
             "Math", "Physics", "Marvel Super Heroes"
     };
+
+    public final static String EXTRA_MESSAGE = "edu.washington.srloftis.quizdroid.MESSAGE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,22 +34,15 @@ public class MainActivity extends Activity {
         listView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0) {
-                    Intent intent = new Intent(MainActivity.this, Math.class);
-                    startActivity(intent);
-                }
-                if (position == 1) {
-                    Intent intent = new Intent(MainActivity.this, Physics.class);
-                    startActivity(intent);
-                }
-                if (position == 2) {
-                    Intent intent = new Intent(MainActivity.this, MH.class);
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(MainActivity.this, Topic.class);
+                if (position == 0)
+                    intent.putExtra(EXTRA_MESSAGE, topics[0]);
+                if (position == 1)
+                    intent.putExtra(EXTRA_MESSAGE, topics[1]);
+                if (position == 2)
+                    intent.putExtra(EXTRA_MESSAGE, topics[2]);
+                startActivity(intent);
             }
         });
-
-
-
     }
 }
