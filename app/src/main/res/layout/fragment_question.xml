@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.washington.srloftis.quizdroid.Question">
+    tools:context="edu.washington.srloftis.quizdroid.QuestionFrag">
 
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
@@ -12,7 +12,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Question?" />
+            android:id="@+id/questionHolder"/>
         <RadioGroup
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -20,19 +20,19 @@
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Nah bro" />
+                android:id="@+id/radio1"/>
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sorry kid"/>
+                android:id="@+id/radio2"/>
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="You tried"/>
+                android:id="@+id/radio3"/>
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Nailed it!!"/>
+                android:id="@+id/radio4"/>
         </RadioGroup>
         <Button
             android:layout_width="wrap_content"

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -17,28 +18,35 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link TopicOverview.OnFragmentInteractionListener} interface
+ * {@link QuestionFrag.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link TopicOverview#newInstance} factory method to
+ * Use the {@link QuestionFrag#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TopicOverview extends Fragment {
+public class QuestionFrag extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String ARG_CORRECT = "correct";
+    private static final String ARG_TOTAL = "total";
     private static final String ARG_TOPIC = "topic";
 
-    Button begin;
-    TextView title;
-    TextView descr;
+    TextView questionHolder;
+    RadioGroup answers;
+    Button answer1;
+    Button answer2;
+    Button answer3;
+    Button answer4;
+    Button submit;
     private Fragment displayedFragment = null;
 
     // TODO: Rename and change types of parameters
+    private int mCorrect;
+    private int mTotal;
     private int mTopic;
-
 
     private OnFragmentInteractionListener mListener;
 
-    public TopicOverview() {
+    public QuestionFrag() {
         // Required empty public constructor
     }
 
@@ -46,13 +54,16 @@ public class TopicOverview extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param topic Parameter 1.
-     * @return A new instance of fragment TopicOverview.
+     * @param correct Parameter 1.
+     * @param total Parameter 2.
+     * @return A new instance of fragment QuestionFrag.
      */
     // TODO: Rename and change types and number of parameters
-    public static TopicOverview newInstance(int topic) {
-        TopicOverview fragment = new TopicOverview();
+    public static QuestionFrag newInstance(int correct, int total, int topic) {
+        QuestionFrag fragment = new QuestionFrag();
         Bundle args = new Bundle();
+        args.putInt(ARG_CORRECT, correct);
+        args.putInt(ARG_TOTAL, total);
         args.putInt(ARG_TOPIC, topic);
         fragment.setArguments(args);
         return fragment;
@@ -62,6 +73,8 @@ public class TopicOverview extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            mCorrect = getArguments().getInt(ARG_CORRECT);
+            mTotal = getArguments().getInt(ARG_TOTAL);
             mTopic = getArguments().getInt(ARG_TOPIC);
         }
     }
@@ -70,24 +83,43 @@ public class TopicOverview extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_topic_overview, container, false);
-        title = (TextView) view.findViewById(R.id.topicTitle);
-        descr = (TextView) view.findViewById(R.id.topicDescr);
+        View view = inflater.inflate(R.layout.fragment_question, container, false);
 
         QuizApp app = (QuizApp)this.getActivity().getApplication();
         final ArrayList<Topic> topics = (ArrayList)app.getRepo().getTopics();
+        Topic topic = topics.get(mTopic);
+        final Question question = topic.questions.get(mTotal);
 
-        title.setText(topics.get(mTopic).title);
-        descr.setText(topics.get(mTopic).longDescr);
-        begin = (Button) view.findViewById(R.id.btnBegin);
-        begin.setOnClickListener(new View.OnClickListener() {
+        submit = (Button) view.findViewById(R.id.btnSubmit);
+        questionHolder = (TextView) view.findViewById(R.id.questionHolder);
+        questionHolder.setText(question.question);
+        answers = (RadioGroup) view.findViewById(R.id.radiogroup);
+        answer1= (Button) view.findViewById(R.id.radio1);
+        answer1.setText(question.answers.get(0));
+        answer2= (Button) view.findViewById(R.id.radio2);
+        answer2.setText(question.answers.get(1));
+        answer3= (Button) view.findViewById(R.id.radio3);
+        answer3.setText(question.answers.get(2));
+        answer4= (Button) view.findViewById(R.id.radio4);
+        answer4.setText(question.answers.get(3));
+
+
+        submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                displayedFragment = QuestionFrag.newInstance(0, 0, mTopic);
+                int checked = answers.getCheckedRadioButtonId();
+                if (checked != -1) {
+                    Button answer = (Button) answers.findViewById(checked);
+                    String youAnswered = (String) answer.getText();
+                    if (youAnswered == question.answers.get(question.correct))
+                        mCorrect++;
 
-                FragmentTransaction tx = getFragmentManager().beginTransaction();
-                tx.replace(R.id.fragment_placeholder, displayedFragment);
-                tx.commit();
+                    displayedFragment = AnswerFrag.newInstance(mCorrect, mTotal, youAnswered, mTopic);
+
+                    FragmentTransaction tx = getFragmentManager().beginTransaction();
+                    tx.replace(R.id.fragment_placeholder, displayedFragment);
+                    tx.commit();
+                }
             }
         });
 
@@ -104,12 +136,12 @@ public class TopicOverview extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-       // if (context instanceof OnFragmentInteractionListener) {
-       //     mListener = (OnFragmentInteractionListener) context;
-      //  } else {
-       //     throw new RuntimeException(context.toString()
-       //             + " must implement OnFragmentInteractionListener");
-       // }
+      //  if (context instanceof OnFragmentInteractionListener) {
+        //    mListener = (OnFragmentInteractionListener) context;
+       // } else {
+        //    throw new RuntimeException(context.toString()
+      //              + " must implement OnFragmentInteractionListener");
+        //}
     }
 
     @Override

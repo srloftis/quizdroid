@@ -12,21 +12,24 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link Answer.OnFragmentInteractionListener} interface
+ * {@link AnswerFrag.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link Answer#newInstance} factory method to
+ * Use the {@link AnswerFrag#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Answer extends Fragment {
+public class AnswerFrag extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_CORRECT = "correct";
     private static final String ARG_TOTAL = "total";
     private static final String ARG_ANSWER = "answer";
+    private static final String ARG_TOPIC = "topic";
 
     Button next;
     TextView yourAnswer;
@@ -38,10 +41,11 @@ public class Answer extends Fragment {
     private int mCorrect;
     private int mTotal;
     private String mAnswer;
+    private int mTopic;
 
     private OnFragmentInteractionListener mListener;
 
-    public Answer() {
+    public AnswerFrag() {
         // Required empty public constructor
     }
 
@@ -52,15 +56,16 @@ public class Answer extends Fragment {
      * @param correct Parameter 1.
      * @param total Parameter 2.
      * @param answer Parameter 3.
-     * @return A new instance of fragment Answer.
+     * @return A new instance of fragment AnswerFrag.
      */
     // TODO: Rename and change types and number of parameters
-    public static Answer newInstance(int correct, int total, String answer) {
-        Answer fragment = new Answer();
+    public static AnswerFrag newInstance(int correct, int total, String answer, int topic) {
+        AnswerFrag fragment = new AnswerFrag();
         Bundle args = new Bundle();
         args.putInt(ARG_CORRECT, correct);
         args.putInt(ARG_TOTAL, total);
         args.putString(ARG_ANSWER, answer);
+        args.putInt(ARG_TOPIC, topic);
         fragment.setArguments(args);
         return fragment;
     }
@@ -72,6 +77,7 @@ public class Answer extends Fragment {
             mCorrect = getArguments().getInt(ARG_CORRECT);
             mTotal = getArguments().getInt(ARG_TOTAL);
             mAnswer = getArguments().getString(ARG_ANSWER);
+            mTopic = getArguments().getInt(ARG_TOPIC);
         }
     }
 
@@ -81,14 +87,21 @@ public class Answer extends Fragment {
         // Inflate the layout for this fragment
 
         View view = inflater.inflate(R.layout.fragment_answer, container, false);
+
+        QuizApp app = (QuizApp)this.getActivity().getApplication();
+        final ArrayList<Topic> topics = (ArrayList)app.getRepo().getTopics();
+        Topic topic = topics.get(mTopic);
+        final Question question = topic.questions.get(mTotal);
+
         yourAnswer = (TextView) view.findViewById(R.id.yourAnswer);
         correctAnswer = (TextView) view.findViewById(R.id.correctAnswer);
         progress = (TextView) view.findViewById(R.id.progress);
         yourAnswer.setText("You answered: " + mAnswer);
-        correctAnswer.setText("Correct answer: Nailed it!!");
+        correctAnswer.setText("Correct answer: " + question.answers.get((question.correct)));
+        mTotal++;
         progress.setText("You have " + mCorrect + " out of " + mTotal + " correct");
         next = (Button) view.findViewById(R.id.btnNext);
-        if  (mTotal == 2) {
+        if  (mTotal == topic.questions.size()) {
             next.setText("Finish");
             next.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -102,7 +115,7 @@ public class Answer extends Fragment {
             next.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    displayedFragment = Question.newInstance(mCorrect, mTotal);
+                    displayedFragment = QuestionFrag.newInstance(mCorrect, mTotal, mTopic);
                     FragmentTransaction tx = getFragmentManager().beginTransaction();
                     tx.replace(R.id.fragment_placeholder, displayedFragment);
                     tx.commit();

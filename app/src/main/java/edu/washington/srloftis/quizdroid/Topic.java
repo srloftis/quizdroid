@@ -1,28 +1,34 @@
 package edu.washington.srloftis.quizdroid;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
+import java.util.ArrayList;
+import java.util.List;
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
+/**
+ * Created by Sarah on 2/13/2017.
+ */
 
-public class Topic extends Activity {
+public class Topic {
+    public String title;
+    public String shortDescr;
+    public String longDescr;
+    public List<Question> questions;
 
-    private Fragment displayedFragment = null;
+    public Topic(){
+        this("");
+    }
+
+    public Topic(String title){
+        this.title = title;
+        this.shortDescr = "Short description for " + title + " quiz.";
+        this.longDescr = "Long description for " + title + " quiz.";
+        this.questions = new ArrayList<Question>();
+        questions.add(new Question());
+        questions.add(new Question());
+        questions.add(new Question());
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.topic);
-
-        Intent intent = getIntent();
-        String message = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
-
-        displayedFragment = TopicOverview.newInstance(message);
-
-        FragmentTransaction tx = getFragmentManager().beginTransaction();
-        tx.replace(R.id.fragment_placeholder, displayedFragment);
-        tx.commit();
+    public String toString(){
+        return this.title + ": " + this.shortDescr;
     }
 }
